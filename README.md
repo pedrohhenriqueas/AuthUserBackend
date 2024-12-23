@@ -1,8 +1,8 @@
-# User Spring JWT
+# User Spring JWT 🔒
 
 This project is a Spring Boot-based CRUD application that includes JWT authentication and authorization.
 
-## Features
+## Features ✨
 
 - **Authentication and Authorization**: Implemented using JSON Web Tokens (JWT).
 - **Role-based Access Control**: Supports two roles:
@@ -22,13 +22,13 @@ This project is a Spring Boot-based CRUD application that includes JWT authentic
 - **Hibernate & JPA**
 - **PostgreSQL**
 
-## Prerequisites
+## Prerequisites 📋
 
 - Java 17 or higher
 - Maven
 - PostgreSQL
 
-## Getting Started
+## Getting Started 🛠️
 
 1. Clone the repository:
 
@@ -66,7 +66,7 @@ This project is a Spring Boot-based CRUD application that includes JWT authentic
    mvn spring-boot:run
    ```
 
-## API Endpoints
+## API Endpoints 🌐
 
 ### Authentication Endpoints (`/api/auth`)
 
@@ -79,7 +79,7 @@ This project is a Spring Boot-based CRUD application that includes JWT authentic
 - **User Content** (Requires `ROLE_USER` or `ROLE_ADMIN`): `GET /api/test/user`
 - **Admin Board** (Requires `ROLE_ADMIN`): `GET /api/test/admin`
 
-## Directory Structure
+## Directory Structure 📂
 
 ```
 CrudJavaJwt/
@@ -113,14 +113,10 @@ INSERT INTO roles (name) VALUES ('ROLE_USER');
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
 ```
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
-## Contributing
+## Contributing 🤝
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Author
 
-Created by **yourname**. Contributions are welcome!
+Created by **Pedro Santos**. Contributions are welcome!
