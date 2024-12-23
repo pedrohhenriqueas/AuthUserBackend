@@ -33,8 +33,8 @@ This project is a Spring Boot-based CRUD application that includes JWT authentic
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/CrudJavaJwt.git
-   cd CrudJavaJwt
+   git clone https://github.com/pedrohhenriqueas/UserSpringJwt.git
+   cd UserSpringJwt
    ```
 
 2. Check out the master branch (default branch):
