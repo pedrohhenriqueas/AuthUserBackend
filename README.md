@@ -14,7 +14,7 @@ This project is a Spring Boot-based CRUD application that includes JWT authentic
   - `/api/test/**`: For role-based test content.
 - **Secure Password Storage**: Uses `BCryptPasswordEncoder`.
 
-## Technologies Used
+## Technologies Used 🛠️
 
 - **Spring Boot**
 - **Spring Security**
@@ -102,7 +102,7 @@ CrudJavaJwt/
 └── README.md
 ```
 
-## Default Roles
+## Default Roles 🛡️
 
 To initialize the roles (`ROLE_USER` and `ROLE_ADMIN`), ensure they are inserted into the database before running the application.
 
