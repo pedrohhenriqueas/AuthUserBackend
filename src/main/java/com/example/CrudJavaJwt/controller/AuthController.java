@@ -23,21 +23,15 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try {
-            JwtResponse jwtResponse = authService.authenticateUser(loginRequest);
-            return ResponseEntity.ok(jwtResponse);
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body(null);
-        }
+        JwtResponse jwtResponse = authService.authenticateUser(loginRequest);
+
+        return ResponseEntity.ok(jwtResponse);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        try {
-            MessageResponse messageResponse = authService.registerUser(signUpRequest);
-            return ResponseEntity.ok(messageResponse);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
-        }
+        MessageResponse messageResponse = authService.registerUser(signUpRequest);
+
+        return ResponseEntity.ok(messageResponse);
     }
 }

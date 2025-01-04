@@ -1,5 +1,8 @@
 package com.example.CrudJavaJwt.service;
 
+import com.example.CrudJavaJwt.exception.UserNotFoundException;
+import com.example.CrudJavaJwt.model.ERole;
+import com.example.CrudJavaJwt.model.Roles;
 import com.example.CrudJavaJwt.model.Users;
 import com.example.CrudJavaJwt.payload.request.SignupRequest;
 import com.example.CrudJavaJwt.repository.RoleRepository;
@@ -10,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -29,55 +31,49 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<Users> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Users getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
     public Users updateUser(Long id, SignupRequest signUpRequest) {
-        Optional<Users> existingUserOpt = userRepository.findById(id);
+        Users existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        if (!existingUserOpt.isPresent()) {
-            throw new RuntimeException("User not found with id: " + id);
+        if (signUpRequest.getUsername() != null) {
+            existingUser.setName(signUpRequest.getUsername());
+        }
+        if (signUpRequest.getEmail() != null) {
+            existingUser.setEmail(signUpRequest.getEmail());
+        }
+        if (signUpRequest.getPassword() != null) {
+            existingUser.setPassword(encoder.encode(signUpRequest.getPassword()));
         }
 
-        Users existingUser = existingUserOpt.get();
-
-        existingUser.setName(signUpRequest.getUsername());
-        existingUser.setEmail(signUpRequest.getEmail());
-        existingUser.setPassword(encoder.encode(signUpRequest.getPassword()));
-
         Set<String> strRoles = signUpRequest.getRole();
-        Set<com.example.CrudJavaJwt.model.Roles> roles = new HashSet<>();
-
-        if (strRoles == null) {
-            com.example.CrudJavaJwt.model.Roles userRole = roleRepository.findByName(com.example.CrudJavaJwt.model.ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
+        if (strRoles != null) {
+            Set<Roles> roles = new HashSet<>();
             strRoles.forEach(role -> {
                 if (role.equals("admin")) {
-                    com.example.CrudJavaJwt.model.Roles adminRole = roleRepository.findByName(com.example.CrudJavaJwt.model.ERole.ROLE_ADMIN)
+                    Roles adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                             .orElseThrow(() -> new RuntimeException("Error: Role ADMIN is not found."));
                     roles.add(adminRole);
                 } else {
-                    com.example.CrudJavaJwt.model.Roles userRole = roleRepository.findByName(com.example.CrudJavaJwt.model.ERole.ROLE_USER)
+                    Roles userRole = roleRepository.findByName(ERole.ROLE_USER)
                             .orElseThrow(() -> new RuntimeException("Error: Role USER is not found."));
                     roles.add(userRole);
                 }
             });
+            existingUser.setRoles(roles);
         }
 
-        existingUser.setRoles(roles);
         return userRepository.save(existingUser);
     }
 
     public void deleteUser(Long id) {
-        Optional<Users> userOpt = userRepository.findById(id);
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
 
-        if (!userOpt.isPresent()) {
-            throw new RuntimeException("User not found with id: " + id);
-        }
-
-        userRepository.deleteById(id);
+        userRepository.delete(user);
     }
 }

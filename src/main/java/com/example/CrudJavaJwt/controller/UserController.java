@@ -27,35 +27,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        Optional<Users> user = userService.getUserById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.status(404).body("User not found");
-        }
+    public ResponseEntity<Users> getUserById(@PathVariable Long id) {
+        Users user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody SignupRequest signUpRequest) {
-        try {
-            Users updatedUser = userService.updateUser(id, signUpRequest);
-            return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(new MessageResponse(e.getMessage()));
-        }
+    public ResponseEntity<Users> updateUser(@PathVariable("id") Long id, @RequestBody SignupRequest signUpRequest) {
+        Users updatedUser = userService.updateUser(id, signUpRequest);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        try {
-            userService.deleteUser(id);
-            return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(new MessageResponse(e.getMessage()));
-        }
+    public ResponseEntity<MessageResponse> deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
     }
 }
 

@@ -1,6 +1,8 @@
 package com.example.CrudJavaJwt.service;
 
 
+import com.example.CrudJavaJwt.exception.ConflictException;
+import com.example.CrudJavaJwt.exception.EmptyListException;
 import com.example.CrudJavaJwt.model.ERole;
 import com.example.CrudJavaJwt.model.Roles;
 import com.example.CrudJavaJwt.model.Users;
@@ -59,11 +61,11 @@ public class AuthService {
 
     public MessageResponse registerUser(SignupRequest signUpRequest) {
         if (userRepository.existsByName(signUpRequest.getUsername())) {
-            throw new RuntimeException("Error: Username is already taken!");
+            throw new ConflictException("Error: Username is already taken!");
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new RuntimeException("Error: Email is already in use!");
+            throw new ConflictException("Error: Email is already in use!");
         }
 
         Users user = new Users(signUpRequest.getUsername(), signUpRequest.getEmail(),
@@ -74,17 +76,17 @@ public class AuthService {
 
         if (strRoles == null) {
             Roles userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new EmptyListException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 if (role.equals("admin")) {
                     Roles adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Error: Role ADMIN is not found."));
+                            .orElseThrow(() -> new EmptyListException("Error: Role ADMIN is not found."));
                     roles.add(adminRole);
                 } else {
                     Roles userRole = roleRepository.findByName(ERole.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Error: Role USER is not found."));
+                            .orElseThrow(() -> new EmptyListException("Error: Role USER is not found."));
                     roles.add(userRole);
                 }
             });
