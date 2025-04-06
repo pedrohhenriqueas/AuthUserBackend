@@ -1,10 +1,10 @@
-package com.example.CrudJavaJwt;
+package com.example.auth_user_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CrudJavaJwtApplicationTests {
+class AuthUserBackendApplicationTests {
 
 	@Test
 	void contextLoads() {
