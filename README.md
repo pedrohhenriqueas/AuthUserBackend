@@ -1,4 +1,4 @@
-# User Spring JWT 🔒
+# Auth User Backend 🔒
 
 This project is a Spring Boot-based CRUD application that includes JWT authentication and authorization.
 
