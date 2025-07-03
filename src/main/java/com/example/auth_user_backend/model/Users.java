@@ -2,7 +2,6 @@ package com.example.auth_user_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,10 +15,8 @@ public class Users {
     private Long id;
 
     private String name;
-    @NotNull
     private String email;
 
-    @NotNull
     @JsonIgnore
     private String password;
 

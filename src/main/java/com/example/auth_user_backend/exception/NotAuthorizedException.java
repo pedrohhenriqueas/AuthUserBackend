@@ -1,7 +1,12 @@
 package com.example.auth_user_backend.exception;
 
 public class NotAuthorizedException extends RuntimeException {
-    public NotAuthorizedException(String message) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public NotAuthorizedException(String message) {
         super(message);
     }
 }

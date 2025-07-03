@@ -1,7 +1,12 @@
 package com.example.auth_user_backend.exception;
 
 public class MsgException extends RuntimeException{
-    public MsgException(String msg) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public MsgException(String msg) {
         super(msg);
     }
 }

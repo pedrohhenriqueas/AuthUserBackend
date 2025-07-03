@@ -14,23 +14,23 @@ import com.example.auth_user_backend.repository.RoleRepository;
 @Configuration
 public class RoleSeeder {
 
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Bean
-    public CommandLineRunner insertRoles() {
-        return args -> {
-            insertIfNotExists(ERole.ROLE_USER);
-            insertIfNotExists(ERole.ROLE_ADMIN);
-        };
-    }
-
-    @Transactional
-    public void insertIfNotExists(ERole roleName) {
-        if (!roleRepository.existsByName(roleName)) {
-            Roles roles = new Roles();
-            roles.setName(roleName);
-            roleRepository.save(roles);
-        }
-    }
+//    @Autowired
+//    private RoleRepository roleRepository;
+//
+//    @Bean
+//    public CommandLineRunner insertRoles() {
+//        return args -> {
+//            insertIfNotExists(ERole.ROLE_USER);
+//            insertIfNotExists(ERole.ROLE_ADMIN);
+//        };
+//    }
+//
+//    @Transactional
+//    public void insertIfNotExists(ERole roleName) {
+//        if (!roleRepository.existsByName(roleName)) {
+//            Roles roles = new Roles();
+//            roles.setName(roleName);
+//            roleRepository.save(roles);
+//        }
+//    }
 }

@@ -11,7 +11,6 @@ import com.example.auth_user_backend.payload.response.MessageResponse;
 import com.example.auth_user_backend.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")

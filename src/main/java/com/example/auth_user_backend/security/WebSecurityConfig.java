@@ -1,8 +1,5 @@
 package com.example.auth_user_backend.security;
 
-import com.example.auth_user_backend.security.jwt.AuthEntryPointJwt;
-import com.example.auth_user_backend.security.jwt.AuthTokenFilter;
-import com.example.auth_user_backend.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.auth_user_backend.security.jwt.AuthEntryPointJwt;
+import com.example.auth_user_backend.security.jwt.AuthTokenFilter;
+import com.example.auth_user_backend.security.services.UserDetailsServiceImpl;
 
 
 @Configuration
@@ -35,10 +36,8 @@ public class WebSecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
-
         return authProvider;
     }
 
@@ -62,9 +61,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/api/test/**").permitAll()
                             .anyRequest().authenticated()
                 );
-
         http.authenticationProvider(authenticationProvider());
-
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
