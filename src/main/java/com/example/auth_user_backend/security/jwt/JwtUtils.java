@@ -25,11 +25,15 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    private final int jwtExpirationMs;
+    private final Key key;
 
-    @Value("${jwt.expirationMs}")
-    private int jwtExpirationMs;
+    public JwtUtils(@Value("${jwt.secret}") String jwtSecret,
+            @Value("${jwt.expirationMs}") int jwtExpirationMs) {
+        this.jwtExpirationMs = jwtExpirationMs;
+        // A mesma chave precisa ser usada para assinar e para validar.
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
 
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
@@ -43,19 +47,17 @@ public class JwtUtils {
                 .compact();
     }
 
-    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-    public String getUserNameFromJwtToken(String token) {
-		Claims claims = claims(token);
-		return claims.getSubject();
+    public String getUserEmailFromJwtToken(String token) {
+        Claims claims = claims(token);
+        return claims.getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-			JwtParser jwtParser = Jwts.parserBuilder()
-									  .setSigningKey(jwtSecret.getBytes(StandardCharsets.UTF_8)).build();
-			jwtParser.parseClaimsJws(authToken);
+            claims(authToken);
             return true;
+        } catch (io.jsonwebtoken.security.SignatureException e) {
+            logger.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
@@ -68,9 +70,11 @@ public class JwtUtils {
 
         return false;
     }
-    
+
     public Claims claims(String tokenJwt) {
-    	JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(jwtSecret.getBytes()).build();
-    	return jwtParser.parseClaimsJws(tokenJwt).getBody();
-	}
+        JwtParser jwtParser = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build();
+        return jwtParser.parseClaimsJws(tokenJwt).getBody();
+    }
 }

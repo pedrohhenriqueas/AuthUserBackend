@@ -1,5 +1,7 @@
 package com.example.auth_user_backend.model;
 
+import com.example.auth_user_backend.model.enums.ERole;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,7 +16,8 @@ public class Roles {
     @Column(length = 20)
     private ERole name;
 
-    public Roles() {}
+    public Roles() {
+    }
 
     public Roles(ERole name) {
         this.name = name;

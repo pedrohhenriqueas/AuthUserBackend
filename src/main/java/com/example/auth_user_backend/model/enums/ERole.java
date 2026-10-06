@@ -1,4 +1,4 @@
-package com.example.auth_user_backend.model;
+package com.example.auth_user_backend.model.enums;
 
 public enum ERole {
     ROLE_USER,

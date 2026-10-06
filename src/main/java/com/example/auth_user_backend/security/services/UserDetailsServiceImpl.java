@@ -1,31 +1,28 @@
 package com.example.auth_user_backend.security.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.auth_user_backend.model.Users;
-import com.example.auth_user_backend.repository.UserRepository;
+import com.example.auth_user_backend.service.UserService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    UserRepository userRepository;
 
-    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-        Users users = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
+	private final UserService userService;
 
-        return UserDetailsImpl.build(users);
-    }
+	public UserDetailsServiceImpl(UserService userService) {
+		this.userService = userService;
+	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users users = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+	public UserDetails loadUserByEmail(String email) {
+		Users users = userService.findByEmailWithRoles(email);
+		return UserDetailsImpl.build(users);
+	}
 
-        return UserDetailsImpl.build(users);
+	public UserDetails loadUserByUsername(String username) {
+		Users users = userService.findByName(username);
+		return UserDetailsImpl.build(users);
 	}
 }
