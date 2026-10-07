@@ -4,6 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
+import jakarta.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,13 +27,16 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    private final int jwtExpirationMs;
-    private final Key key;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-    public JwtUtils(@Value("${jwt.secret}") String jwtSecret,
-            @Value("${jwt.expirationMs}") int jwtExpirationMs) {
-        this.jwtExpirationMs = jwtExpirationMs;
-        // A mesma chave precisa ser usada para assinar e para validar.
+    @Value("${jwt.expirationMs}")
+    private int jwtExpirationMs;
+
+    private Key key;
+
+    @PostConstruct
+    public void init() {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -76,5 +81,14 @@ public class JwtUtils {
                 .setSigningKey(key)
                 .build();
         return jwtParser.parseClaimsJws(tokenJwt).getBody();
+    }
+
+    public String generateTokenFromEmail(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 }

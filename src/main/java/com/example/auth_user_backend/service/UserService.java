@@ -89,8 +89,8 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void insertUser(Users user) {
-        userRepository.save(user);
+    public Users insertUser(Users user) {
+        return userRepository.save(user);
     }
 
     public Users findByEmailWithRoles(String email) {

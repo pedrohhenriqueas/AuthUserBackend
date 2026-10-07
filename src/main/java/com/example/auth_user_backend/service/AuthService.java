@@ -2,6 +2,7 @@ package com.example.auth_user_backend.service;
 
 import com.example.auth_user_backend.exception.ConflictException;
 import com.example.auth_user_backend.exception.EmptyListException;
+import com.example.auth_user_backend.model.RefreshTokenDto;
 import com.example.auth_user_backend.model.Roles;
 import com.example.auth_user_backend.model.Users;
 import com.example.auth_user_backend.model.enums.ERole;
@@ -11,6 +12,7 @@ import com.example.auth_user_backend.payload.response.JwtResponse;
 import com.example.auth_user_backend.payload.response.MessageResponse;
 import com.example.auth_user_backend.repository.RoleRepository;
 import com.example.auth_user_backend.security.jwt.JwtUtils;
+import com.example.auth_user_backend.security.services.RefreshTokenService;
 import com.example.auth_user_backend.security.services.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,17 +32,20 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthService(AuthenticationManager authenticationManager,
             JwtUtils jwtUtils,
             RoleRepository roleRepository,
             PasswordEncoder encoder,
-            UserService userService) {
+            UserService userService,
+            RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.userService = userService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
@@ -53,7 +58,10 @@ public class AuthService {
                 .map(item -> item.getAuthority())
                 .toList();
 
-        return new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
+        RefreshTokenDto refreshTokenDto = refreshTokenService.createRefreshToken(userDetails.getId());
+
+        return new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles,
+                refreshTokenDto.getToken());
     }
 
     public MessageResponse registerUser(SignupRequest signUpRequest) {
