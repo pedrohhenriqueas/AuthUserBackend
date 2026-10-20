@@ -47,6 +47,7 @@ public class HandleException extends ResponseEntityExceptionHandler {
         EXCEPTION_STATUS.put(ConflictException.class, HttpStatus.CONFLICT);
 
         EXCEPTION_STATUS.put(AccessDeniedException.class, HttpStatus.FORBIDDEN);
+        EXCEPTION_STATUS.put(TokenRefreshException.class, HttpStatus.FORBIDDEN);
 
         EXCEPTION_STATUS.put(IOException.class, HttpStatus.INTERNAL_SERVER_ERROR);
         EXCEPTION_STATUS.put(IndexOutOfBoundsException.class, HttpStatus.INTERNAL_SERVER_ERROR);
